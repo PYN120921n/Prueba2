@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reportes - Sistema de Gestión de Tienda</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+<div class="app-container">
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <i class="fas fa-store"></i>
+            <h2 id="nombre-tienda">Mi Tienda</h2>
+        </div>
+
+        <div class="sidebar-menu">
+            <a href="dashboard.html" class="menu-item">
+                <i class="fas fa-tachometer-alt"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="ventas.html" class="menu-item">
+                <i class="fas fa-cash-register"></i>
+                <span>Punto de Venta</span>
+            </a>
+            <a href="productos.html" class="menu-item">
+                <i class="fas fa-box"></i>
+                <span>Productos</span>
+            </a>
+            <a href="compras.html" class="menu-item">
+                <i class="fas fa-truck-loading"></i>
+                <span>Compras</span>
+            </a>
+            <a href="reportes.html" class="menu-item active">
+                <i class="fas fa-chart-bar"></i>
+                <span>Reportes</span>
+            </a>
+            <a href="#" id="logout-btn" class="menu-item">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Cerrar Sesión</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-left">
+                <h1>Reportes y Estadísticas</h1>
+            </div>
+            <div class="header-right">
+                <div class="user-info">
+                    <i class="fas fa-user"></i>
+                    <span id="username-display">Usuario</span>
+                </div>
+                <div class="date-display" id="current-date"></div>
+            </div>
+        </div>
+
+        <!-- Content -->
+        <div class="content">
+            <div class="section">
+                <div class="section-header">
+                    <h3>Filtros de Reportes</h3>
+                </div>
+                <div class="section-body">
+                    <div class="row">
+                        <div class="col-3">
+                            <div class="form-group">
+                                <label for="reporte-tipo">Tipo de Reporte</label>
+                                <select id="reporte-tipo" class="form-control">
+                                    <option value="ventas">Ventas</option>
+                                    <option value="compras">Compras</option>
+                                    <option value="inventario">Inventario</option>
+                                    <option value="caja">Estado de Caja</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="form-group">
+                                <label for="reporte-fecha-desde">Desde</label>
+                                <input type="date" id="reporte-fecha-desde" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="form-group">
+                                <label for="reporte-fecha-hasta">Hasta</label>
+                                <input type="date" id="reporte-fecha-hasta" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="form-group">
+                                <label>&nbsp;</label>
+                                <button class="btn btn-primary btn-block" id="generar-reporte-btn">
+                                    <i class="fas fa-sync"></i> Generar Reporte
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-header">
+                    <h3 id="reporte-titulo">Reporte de Ventas</h3>
+                    <button class="btn btn-success" id="exportar-reporte-btn">
+                        <i class="fas fa-download"></i> Exportar a PDF
+                    </button>
+                </div>
+                <div class="section-body">
+                    <div class="reporte-resumen" id="reporte-resumen">
+                        <!-- El resumen del reporte se mostrará aquí -->
+                    </div>
+
+                    <div class="reporte-graficas">
+                        <div class="row">
+                            <div class="col-6">
+                                <canvas id="grafica-ventas" height="300"></canvas>
+                            </div>
+                            <div class="col-6">
+                                <canvas id="grafica-productos" height="300"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="reporte-tabla">
+                        <table class="table" id="tabla-reporte">
+                            <thead>
+                            <tr>
+                                <!-- Las columnas de la tabla se definirán según el tipo de reporte -->
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <!-- Los datos del reporte se mostrarán aquí -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/dexie@3.2.1/dist/dexie.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+<script src="js/database.js"></script>
+<script src="js/reportes.js"></script>
+</body>
+</html>

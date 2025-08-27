@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compras - Sistema de Gestión de Tienda</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="app-container">
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <i class="fas fa-store"></i>
+            <h2>Los 2 Hermanos</h2>
+        </div>
+
+        <div class="sidebar-menu">
+            <a href="dashboard.html" class="menu-item">
+                <i class="fas fa-tachometer-alt"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="ventas.html" class="menu-item">
+                <i class="fas fa-cash-register"></i>
+                <span>Punto de Venta</span>
+            </a>
+            <a href="productos.html" class="menu-item">
+                <i class="fas fa-box"></i>
+                <span>Productos</span>
+            </a>
+            <a href="compras.html" class="menu-item active">
+                <i class="fas fa-truck-loading"></i>
+                <span>Compras</span>
+            </a>
+            <a href="reportes.html" class="menu-item">
+                <i class="fas fa-chart-bar"></i>
+                <span>Reportes</span>
+            </a>
+            <a href="#" id="logout-btn" class="menu-item">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Cerrar Sesión</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-left">
+                <h1>Registro de Compras</h1>
+            </div>
+            <div class="header-right">
+                <div class="user-info">
+                    <i class="fas fa-user"></i>
+                    <span id="username-display">Usuario</span>
+                </div>
+                <div class="date-display" id="current-date"></div>
+            </div>
+        </div>
+
+        <!-- Content -->
+        <div class="content">
+            <div class="section">
+                <div class="section-header">
+                    <h3>Nueva Compra a Proveedor</h3>
+                </div>
+                <div class="section-body">
+                    <form id="form-compra">
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label for="proveedor">Proveedor *</label>
+                                    <input type="text" id="proveedor" class="form-control" required>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label for="fecha-compra">Fecha de Compra *</label>
+                                    <input type="date" id="fecha-compra" class="form-control" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-8">
+                                <div class="form-group">
+                                    <label for="producto-compra">Producto</label>
+                                    <select id="producto-compra" class="form-control">
+                                        <option value="">Seleccionar producto</option>
+                                        <!-- Los productos se cargarán aquí -->
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="form-group">
+                                    <label for="cantidad-compra">Cantidad</label>
+                                    <input type="number" id="cantidad-compra" class="form-control" value="1" min="1">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label for="precio-compra">Precio de Compra *</label>
+                                    <input type="number" id="precio-compra" class="form-control" step="0.01" min="0" required>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label>&nbsp;</label>
+                                    <button type="button" class="btn btn-primary btn-block" id="agregar-producto-btn">
+                                        <i class="fas fa-plus"></i> Agregar Producto
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+
+                    <div class="compra-productos">
+                        <h4>Productos de la Compra</h4>
+                        <table class="table" id="tabla-compra-productos">
+                            <thead>
+                            <tr>
+                                <th>Producto</th>
+                                <th>Cantidad</th>
+                                <th>Precio Unitario</th>
+                                <th>Total</th>
+                                <th>Acción</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <!-- Los productos de la compra se mostrarán aquí -->
+                            </tbody>
+                        </table>
+
+                        <div class="compra-totales">
+                            <div class="total-line total">
+                                <span>Total:</span>
+                                <span id="compra-total">$0.00</span>
+                            </div>
+                        </div>
+
+                        <button class="btn btn-success" id="registrar-compra-btn" disabled>
+                            <i class="fas fa-check"></i> Registrar Compra
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-header">
+                    <h3>Historial de Compras</h3>
+                </div>
+                <div class="section-body">
+                    <div class="table-controls">
+                        <div class="search-box">
+                            <input type="text" id="buscar-compra" placeholder="Buscar compra..." class="form-control">
+                            <i class="fas fa-search"></i>
+                        </div>
+                    </div>
+
+                    <table class="table" id="tabla-compras">
+                        <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Fecha</th>
+                            <th>Proveedor</th>
+                            <th>Productos</th>
+                            <th>Total</th>
+                            <th>Usuario</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <!-- El historial de compras se cargará aquí -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/dexie@3.2.1/dist/dexie.min.js"></script>
+<script src="js/database.js"></script>
+<script src="js/compras.js"></script>
+</body>
+</html>

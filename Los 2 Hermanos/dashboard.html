@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Sistema de Gestión de Tienda</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+<div class="app-container">
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <i class="fas fa-store"></i>
+            <h2 id="nombre-tienda">Mi Tienda</h2>
+        </div>
+
+        <div class="sidebar-menu">
+            <a href="dashboard.html" class="menu-item active">
+                <i class="fas fa-tachometer-alt"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="ventas.html" class="menu-item">
+                <i class="fas fa-cash-register"></i>
+                <span>Punto de Venta</span>
+            </a>
+            <a href="productos.html" class="menu-item">
+                <i class="fas fa-box"></i>
+                <span>Productos</span>
+            </a>
+            <a href="compras.html" class="menu-item">
+                <i class="fas fa-truck-loading"></i>
+                <span>Compras</span>
+            </a>
+            <a href="reportes.html" class="menu-item">
+                <i class="fas fa-chart-bar"></i>
+                <span>Reportes</span>
+            </a>
+            <a href="#" id="logout-btn" class="menu-item">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Cerrar Sesión</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-left">
+                <h1>Dashboard</h1>
+            </div>
+            <div class="header-right">
+                <div class="user-info">
+                    <i class="fas fa-user"></i>
+                    <span id="username-display">Usuario</span>
+                </div>
+                <div class="date-display" id="current-date"></div>
+            </div>
+        </div>
+
+        <!-- Content -->
+        <div class="content">
+            <!-- Modal para registro de efectivo inicial -->
+            <div class="modal" id="efectivo-modal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3>Registro de Efectivo Inicial</h3>
+                    </div>
+                    <div class="modal-body">
+                        <p>Por favor, registre el efectivo disponible antes de iniciar las operaciones del día.</p>
+                        <div class="form-group">
+                            <label>Efectivo en Caja:</label>
+                            <input type="number" id="efectivo-caja" placeholder="0.00" step="0.01">
+                        </div>
+                        <div class="form-group">
+                            <label>Efectivo en Cartera de Tienda:</label>
+                            <input type="number" id="efectivo-tienda" placeholder="0.00" step="0.01">
+                        </div>
+                        <div class="form-group">
+                            <label>Efectivo en Cartera Personal:</label>
+                            <input type="number" id="efectivo-personal" placeholder="0.00" step="0.01">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" id="guardar-efectivo">Guardar e Iniciar</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dashboard Cards -->
+            <div class="dashboard-cards">
+                <div class="card">
+                    <div class="card-icon bg-primary">
+                        <i class="fas fa-shopping-cart"></i>
+                    </div>
+                    <div class="card-info">
+                        <h3 id="ventas-hoy">0</h3>
+                        <p>Ventas Hoy</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-icon bg-success">
+                        <i class="fas fa-dollar-sign"></i>
+                    </div>
+                    <div class="card-info">
+                        <h3 id="ingresos-hoy">$0.00</h3>
+                        <p>Ingresos Hoy</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-icon bg-warning">
+                        <i class="fas fa-boxes"></i>
+                    </div>
+                    <div class="card-info">
+                        <h3 id="total-productos">0</h3>
+                        <p>Total Productos</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-icon bg-info">
+                        <i class="fas fa-money-bill-wave"></i>
+                    </div>
+                    <div class="card-info">
+                        <h3 id="efectivo-total">$0.00</h3>
+                        <p>Efectivo Total</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Gráficas y Estadísticas -->
+            <div class="row">
+                <div class="col-6">
+                    <div class="section">
+                        <div class="section-header">
+                            <h3>Ventas de la Semana</h3>
+                        </div>
+                        <div class="section-body">
+                            <canvas id="ventas-semana-chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-6">
+                    <div class="section">
+                        <div class="section-header">
+                            <h3>Productos Más Vendidos</h3>
+                        </div>
+                        <div class="section-body">
+                            <canvas id="top-productos-chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ventas Recientes -->
+            <div class="section">
+                <div class="section-header">
+                    <h3>Ventas Recientes</h3>
+                    <a href="ventas.html" class="btn btn-primary">Nueva Venta</a>
+                </div>
+                <div class="section-body">
+                    <table class="table" id="tabla-ventas-recientes">
+                        <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Fecha</th>
+                            <th>Productos</th>
+                            <th>Total</th>
+                            <th>Método Pago</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <!-- Las ventas recientes se cargarán aquí -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/dexie@3.2.1/dist/dexie.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="js/database.js"></script>
+<script src="js/dashboard.js"></script>
+</body>
+</html>

@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Administrar Base de Datos - Sistema de Gestión</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .container {
+      background-color: white;
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      width: 100%;
+      max-width: 800px;
+      overflow: hidden;
+    }
+
+    .header {
+      background: linear-gradient(90deg, #4b6cb7 0%, #182848 100%);
+      color: white;
+      padding: 25px;
+      text-align: center;
+    }
+
+    .header h1 {
+      font-size: 28px;
+      margin-bottom: 10px;
+    }
+
+    .header p {
+      opacity: 0.9;
+    }
+
+    .content {
+      padding: 30px;
+    }
+
+    .warning-box {
+      background-color: #fff3cd;
+      border-left: 4px solid #ffc107;
+      padding: 20px;
+      margin-bottom: 25px;
+      border-radius: 4px;
+    }
+
+    .warning-box h3 {
+      color: #856404;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    .stat-card {
+      background-color: #f8f9fa;
+      border-radius: 8px;
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    }
+
+    .stat-card h3 {
+      font-size: 14px;
+      color: #6c757d;
+      margin-bottom: 10px;
+    }
+
+    .stat-card .count {
+      font-size: 32px;
+      font-weight: bold;
+      color: #4b6cb7;
+    }
+
+    .actions {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .btn {
+      padding: 15px;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      transition: all 0.3s ease;
+    }
+
+    .btn-danger {
+      background: linear-gradient(90deg, #ff416c 0%, #ff4b2b 100%);
+      color: white;
+    }
+
+    .btn-danger:hover {
+      background: linear-gradient(90deg, #ff4b2b 0%, #ff416c 100%);
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(255, 75, 43, 0.4);
+    }
+
+    .btn-secondary {
+      background-color: #6c757d;
+      color: white;
+    }
+
+    .btn-secondary:hover {
+      background-color: #5a6268;
+      transform: translateY(-2px);
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    .modal-content {
+      background-color: white;
+      border-radius: 12px;
+      width: 90%;
+      max-width: 500px;
+      padding: 30px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      text-align: center;
+    }
+
+    .modal h2 {
+      margin-bottom: 20px;
+      color: #dc3545;
+    }
+
+    .modal p {
+      margin-bottom: 25px;
+      line-height: 1.6;
+    }
+
+    .modal-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+    }
+
+    .back-button {
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    .back-button a {
+      color: #4b6cb7;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 500;
+    }
+
+    .back-button a:hover {
+      text-decoration: underline;
+    }
+
+    .success-message {
+      background-color: #d4edda;
+      color: #155724;
+      padding: 15px;
+      border-radius: 6px;
+      margin-top: 20px;
+      text-align: center;
+      display: none;
+    }
+
+    @media (max-width: 600px) {
+      .stats {
+        grid-template-columns: 1fr;
+      }
+
+      .modal-buttons {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <h1><i class="fas fa-database"></i> Administrar Base de Datos</h1>
+    <p>Gestión y mantenimiento del sistema</p>
+  </div>
+
+  <div class="content">
+    <div class="warning-box">
+      <h3><i class="fas fa-exclamation-triangle"></i> Advertencia</h3>
+      <p>Las operaciones en esta página pueden afectar permanentemente los datos del sistema. Asegúrese de entender las consecuencias antes de proceder.</p>
+    </div>
+
+    <div class="stats">
+      <div class="stat-card">
+        <h3>Productos Registrados</h3>
+        <div class="count" id="productos-count">0</div>
+      </div>
+      <div class="stat-card">
+        <h3>Ventas Realizadas</h3>
+        <div class="count" id="ventas-count">0</div>
+      </div>
+      <div class="stat-card">
+        <h3>Compras Registradas</h3>
+        <div class="count" id="compras-count">0</div>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="btn btn-danger" id="reset-db-btn">
+        <i class="fas fa-trash"></i> Reiniciar Base de Datos Completa
+      </button>
+      <button class="btn btn-secondary" id="reset-ventas-btn">
+        <i class="fas fa-receipt"></i> Eliminar Solo Ventas
+      </button>
+      <button class="btn btn-secondary" id="reset-compras-btn">
+        <i class="fas fa-shopping-cart"></i> Eliminar Solo Compras
+      </button>
+    </div>
+
+    <div class="success-message" id="success-message">
+      <i class="fas fa-check-circle"></i> Operación completada con éxito
+    </div>
+
+    <div class="back-button">
+      <a href="productos.html"><i class="fas fa-arrow-left"></i> Volver al Sistema</a>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de confirmación -->
+<div class="modal" id="confirm-modal">
+  <div class="modal-content">
+    <h2><i class="fas fa-exclamation-circle"></i> Confirmar acción</h2>
+    <p id="modal-message">¿Está seguro de que desea proceder? Esta acción no se puede deshacer.</p>
+    <div class="modal-buttons">
+      <button class="btn btn-danger" id="confirm-btn">Confirmar</button>
+      <button class="btn btn-secondary" id="cancel-btn">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/dexie@3.2.1/dist/dexie.min.js"></script>
+<script>
+  // Configuración de la base de datos
+  const db = new Dexie("SistemaGestionTienda");
+  db.version(1).stores({
+    productos: '++id, codigoBarras, nombre, categoria, precio, stock, proveedor, descripcion, fechaCreacion, fechaActualizacion',
+    ventas: '++id, fecha, total, items',
+    compras: '++id, fecha, total, items, proveedor',
+    usuarios: '++id, username, password, nombre, rol'
+  });
+
+  // Abrir la base de datos
+  db.open().catch(function(err) {
+    console.error("Error abriendo la base de datos: " + err);
+  });
+
+  // Elementos DOM
+  const resetDbBtn = document.getElementById('reset-db-btn');
+  const resetVentasBtn = document.getElementById('reset-ventas-btn');
+  const resetComprasBtn = document.getElementById('reset-compras-btn');
+  const confirmBtn = document.getElementById('confirm-btn');
+  const cancelBtn = document.getElementById('cancel-btn');
+  const confirmModal = document.getElementById('confirm-modal');
+  const modalMessage = document.getElementById('modal-message');
+  const successMessage = document.getElementById('success-message');
+
+  // Variables para el tipo de operación
+  let currentOperation = '';
+
+  // Cargar estadísticas
+  async function loadStats() {
+    try {
+      const productosCount = await db.productos.count();
+      const ventasCount = await db.ventas.count();
+      const comprasCount = await db.compras.count();
+
+      document.getElementById('productos-count').textContent = productosCount;
+      document.getElementById('ventas-count').textContent = ventasCount;
+      document.getElementById('compras-count').textContent = comprasCount;
+    } catch (error) {
+      console.error("Error cargando estadísticas:", error);
+    }
+  }
+
+  // Mostrar modal de confirmación
+  function showConfirmModal(message, operation) {
+    modalMessage.textContent = message;
+    currentOperation = operation;
+    confirmModal.style.display = 'flex';
+  }
+
+  // Ocultar modal de confirmación
+  function hideConfirmModal() {
+    confirmModal.style.display = 'none';
+  }
+
+  // Mostrar mensaje de éxito
+  function showSuccessMessage() {
+    successMessage.style.display = 'block';
+    setTimeout(() => {
+      successMessage.style.display = 'none';
+    }, 3000);
+  }
+
+  // Reiniciar base de datos completa
+  async function resetDatabase() {
+    try {
+      await db.productos.clear();
+      await db.ventas.clear();
+      await db.compras.clear();
+
+      // Agregar datos de ejemplo
+      await db.productos.bulkAdd([
+        {
+          codigoBarras: "7501006554026",
+          nombre: "Leche Entera Alpura 1L",
+          categoria: "alimentos",
+          precio: 25.50,
+          stock: 50,
+          proveedor: "Alpura",
+          descripcion: "Leche entera ultrapasteurizada",
+          fechaCreacion: new Date().getTime(),
+          fechaActualizacion: new Date().getTime()
+        },
+        {
+          codigoBarras: "7501055303129",
+          nombre: "Coca-Cola 600ml",
+          categoria: "bebidas",
+          precio: 18.00,
+          stock: 100,
+          proveedor: "Coca-Cola Company",
+          descripcion: "Refresco de cola",
+          fechaCreacion: new Date().getTime(),
+          fechaActualizacion: new Date().getTime()
+        },
+        {
+          codigoBarras: "7501006554027",
+          nombre: "Jabón Zote",
+          categoria: "limpieza",
+          precio: 15.00,
+          stock: 30,
+          proveedor: "Zote",
+          descripcion: "Jabón de lavandería",
+          fechaCreacion: new Date().getTime(),
+          fechaActualizacion: new Date().getTime()
+        }
+      ]);
+
+      showSuccessMessage();
+      loadStats();
+    } catch (error) {
+      console.error("Error reiniciando base de datos:", error);
+      alert("Error al reiniciar la base de datos.");
+    }
+  }
+
+  // Eliminar solo ventas
+  async function resetVentas() {
+    try {
+      await db.ventas.clear();
+      showSuccessMessage();
+      loadStats();
+    } catch (error) {
+      console.error("Error eliminando ventas:", error);
+      alert("Error al eliminar las ventas.");
+    }
+  }
+
+  // Eliminar solo compras
+  async function resetCompras() {
+    try {
+      await db.compras.clear();
+      showSuccessMessage();
+      loadStats();
+    } catch (error) {
+      console.error("Error eliminando compras:", error);
+      alert("Error al eliminar las compras.");
+    }
+  }
+
+  // Event Listeners
+  resetDbBtn.addEventListener('click', () => {
+    showConfirmModal(
+            "¿Está seguro de que desea reiniciar TODA la base de datos? Se eliminarán todos los productos, ventas y compras, y se restaurarán los datos de ejemplo. Esta acción no se puede deshacer.",
+            'resetDB'
+    );
+  });
+
+  resetVentasBtn.addEventListener('click', () => {
+    showConfirmModal(
+            "¿Está seguro de que desea eliminar TODAS las ventas? Esta acción no se puede deshacer.",
+            'resetVentas'
+    );
+  });
+
+  resetComprasBtn.addEventListener('click', () => {
+    showConfirmModal(
+            "¿Está seguro de que desea eliminar TODAS las compras? Esta acción no se puede deshacer.",
+            'resetCompras'
+    );
+  });
+
+  confirmBtn.addEventListener('click', async () => {
+    hideConfirmModal();
+
+    switch(currentOperation) {
+      case 'resetDB':
+        await resetDatabase();
+        break;
+      case 'resetVentas':
+        await resetVentas();
+        break;
+      case 'resetCompras':
+        await resetCompras();
+        break;
+    }
+  });
+
+  cancelBtn.addEventListener('click', hideConfirmModal);
+
+  // Cargar estadísticas al iniciar
+  document.addEventListener('DOMContentLoaded', loadStats);
+</script>
+</body>
+</html>

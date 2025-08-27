@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Productos - Sistema de Gestión de Tienda</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+<div class="app-container">
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <i class="fas fa-store"></i>
+            <h2 id="nombre-tienda">Mi Tienda</h2>
+        </div>
+
+        <div class="sidebar-menu">
+            <a href="dashboard.html" class="menu-item">
+                <i class="fas fa-tachometer-alt"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="ventas.html" class="menu-item">
+                <i class="fas fa-cash-register"></i>
+                <span>Punto de Venta</span>
+            </a>
+            <a href="productos.html" class="menu-item active">
+                <i class="fas fa-box"></i>
+                <span>Productos</span>
+            </a>
+            <a href="compras.html" class="menu-item">
+                <i class="fas fa-truck-loading"></i>
+                <span>Compras</span>
+            </a>
+            <a href="reportes.html" class="menu-item">
+                <i class="fas fa-chart-bar"></i>
+                <span>Reportes</span>
+            </a>
+            <a href="#" id="logout-btn" class="menu-item">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Cerrar Sesión</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-left">
+                <h1>Gestión de Productos</h1>
+            </div>
+            <div class="header-right">
+                <div class="user-info">
+                    <i class="fas fa-user"></i>
+                    <span id="username-display">Usuario</span>
+                </div>
+                <div class="date-display" id="current-date"></div>
+            </div>
+        </div>
+
+        <!-- Content -->
+        <div class="content">
+            <div class="section">
+                <div class="section-header">
+                    <h3>Inventario de Productos</h3>
+                    <button class="btn btn-primary" id="nuevo-producto-btn">
+                        <i class="fas fa-plus"></i> Nuevo Producto
+                    </button>
+                </div>
+                <div class="section-body">
+                    <div class="table-controls">
+                        <div class="search-box">
+                            <input type="text" id="buscar-producto" placeholder="Buscar producto..." class="form-control">
+                            <i class="fas fa-search"></i>
+                        </div>
+                        <div class="filter-box">
+                            <select id="filtro-categoria" class="form-control">
+                                <option value="">Todas las categorías</option>
+                                <option value="alimentos">Alimentos</option>
+                                <option value="bebidas">Bebidas</option>
+                                <option value="limpieza">Limpieza</option>
+                                <option value="electronicos">Electrónicos</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <table class="table" id="tabla-productos">
+                        <thead>
+                        <tr>
+                            <th>Código</th>
+                            <th>Nombre</th>
+                            <th>Categoría</th>
+                            <th>Precio</th>
+                            <th>Stock</th>
+                            <th>Proveedor</th>
+                            <th>Acciones</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <!-- Los productos se cargarán aquí -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para agregar/editar producto -->
+<div class="modal" id="producto-modal" style="display: none;">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 id="modal-producto-titulo">Nuevo Producto</h3>
+            <span class="close">&times;</span>
+        </div>
+        <div class="modal-body">
+            <form id="form-producto">
+                <input type="hidden" id="producto-id">
+                <div class="row">
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label for="producto-codigo">Código de Barras *</label>
+                            <input type="text" id="producto-codigo" class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label for="producto-nombre">Nombre *</label>
+                            <input type="text" id="producto-nombre" class="form-control" required>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label for="producto-categoria">Categoría *</label>
+                            <select id="producto-categoria" class="form-control" required>
+                                <option value="">Seleccionar categoría</option>
+                                <option value="alimentos">Alimentos</option>
+                                <option value="bebidas">Bebidas</option>
+                                <option value="limpieza">Limpieza</option>
+                                <option value="electronicos">Electrónicos</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label for="producto-precio">Precio *</label>
+                            <input type="number" id="producto-precio" class="form-control" step="0.01" min="0" required>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label for="producto-stock">Stock Inicial *</label>
+                            <input type="number" id="producto-stock" class="form-control" min="0" required>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label for="producto-proveedor">Proveedor</label>
+                            <input type="text" id="producto-proveedor" class="form-control">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="producto-descripcion">Descripción</label>
+                    <textarea id="producto-descripcion" class="form-control" rows="3"></textarea>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" id="guardar-producto-btn">Guardar Producto</button>
+            <button class="btn btn-danger" id="cancelar-producto-btn">Cancelar</button>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/dexie@3.2.1/dist/dexie.min.js"></script>
+<script src="js/database.js"></script>
+<script src="js/productos.js"></script>
+</body>
+</html>
